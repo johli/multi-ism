@@ -32,7 +32,7 @@ Some components require additional packages not covered by `requirements.txt`:
 pip install pybedtools
 
 # Baskerville (for deep learning models)
-# Will be available at: https://github.com/calico/baskerville-torch
+# https://github.com/calico/baskerville
 ```
 
 #### Choosing a runner
@@ -49,9 +49,8 @@ The project ships two runners:
 - **`run_active_hybrid.py`** — submits the design and selection steps as GPU
   jobs and the regression step as a separate CPU job.
   - *Pros:* more resource-efficient and generally faster.
-  - *Cons:* tied to the HPC scheduler. In our setup it runs on SLURM and uses
-    the custom `slurmrunner` package to submit individual jobs
-    (`pip install slurmrunner`).
+  - *Cons:* tied to the HPC scheduler and an internal job-submission
+    dependency; see the "Alternative: run_active_hybrid.py" section below.
 
 ### Installation from Source
 
@@ -296,7 +295,9 @@ outdir/
 If you use MISM in your research, please cite:
 
 ```
-[Citation information to be added]
+Scalable saturation mutagenesis reveals gene regulatory architecture and rare variant effects
+Han Yuan, Xingfan Huang, Benjamin Auerbach, Johannes Linder, Divyanshi Srivastava, David R Kelley
+bioRxiv 2026.09.30.755794; doi: https://doi.org/10.64898/2026.09.30.755794
 ```
 
 ## License
