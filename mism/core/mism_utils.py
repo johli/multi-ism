@@ -200,9 +200,9 @@ def mut_vector_to_1hot(mut_vector, ref_mut_1hot):
     return result_1hot
 
 
-def predict_gene(model, seq_1hot, targets_df, gene_strand_mask, gene_slice):
+def predict_gene(model, seq_1hot, targets_df, gene_strand_mask, gene_slice, hi=0):
     # when model.ensemble_rc=True, this predicts mean of forward and reverse predictions
-    preds = model(seq_1hot).coverage[0]
+    preds = model(seq_1hot, hi=hi)[0]
     preds = dataset.untransform_preds(preds, targets_df)
     preds_gene = preds[gene_strand_mask][:, gene_slice]
     preds_score = torch.log2(preds_gene.sum(axis=1) + 1).cpu().numpy()
@@ -211,16 +211,16 @@ def predict_gene(model, seq_1hot, targets_df, gene_strand_mask, gene_slice):
 
 
 def predict_gene_with_rc(
-    model, seq_1hot, rc_mode, targets_df, gene_strand_mask, gene_slice
+    model, seq_1hot, rc_mode, targets_df, gene_strand_mask, gene_slice, hi=0
 ):
     # used when model.ensemble_rc=False
     # this predicts forward or reverse separately
     if rc_mode == "forward":
-        preds = model(seq_1hot).coverage[0]
+        preds = model(seq_1hot, hi=hi)[0]
 
     elif rc_mode == "reverse":
         seq_rc = dna.torch_rc(seq_1hot)
-        preds_rc = model(seq_rc).coverage[0]
+        preds_rc = model(seq_rc, hi=hi)[0]
         preds = torch.flip(preds_rc, [1])  # Flip predictions along length axis
         if model.strand_pair is not None:
             preds = preds[model.strand_pair, :]

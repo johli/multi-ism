@@ -67,6 +67,12 @@ def main():
         default=None,
         help="Genome FASTA for sequences [Default: %(default)s]",
     )
+    parser.add_argument(
+        "--hi",
+        type=int,
+        default=0,
+        help="Model output head [Default: %(default)s]",
+    )
 
     #################################################################
     # variant file parameters
@@ -221,6 +227,7 @@ def main():
                 targets_df,
                 gene_strand_mask,
                 gene_slice,
+                hi=args.hi,
             )
             alt_score_rev = predict_gene_with_rc(
                 seqnn_model,
@@ -229,6 +236,7 @@ def main():
                 targets_df,
                 gene_strand_mask,
                 gene_slice,
+                hi=args.hi,
             )
             mut_scores_fwd.append(alt_score_fwd)
             mut_scores_rev.append(alt_score_rev)
@@ -268,6 +276,7 @@ def main():
             targets_df,
             gene_strand_mask,
             gene_slice,
+            hi=args.hi,
         )
         ref_score_rev = predict_gene_with_rc(
             seqnn_model,
@@ -276,6 +285,7 @@ def main():
             targets_df,
             gene_strand_mask,
             gene_slice,
+            hi=args.hi,
         )
 
     # Compute logSED for both directions separately

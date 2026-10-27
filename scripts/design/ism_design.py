@@ -88,6 +88,12 @@ def main():
         help="Random seed for RC binary vector when using --rc random [Default: %(default)s]",
     )
     parser.add_argument(
+        "--hi",
+        type=int,
+        default=0,
+        help="Model output head [Default: %(default)s]",
+    )
+    parser.add_argument(
         "-t",
         "--targets_file",
         default=None,
@@ -398,11 +404,12 @@ def main():
                     targets_df,
                     gene_strand_mask,
                     gene_slice,
+                    hi=args.hi,
                 )
             else:  # ensemble and forward modes
                 # Use predict_gene since model is already configured with correct ensemble_rc setting
                 alt_score = predict_gene(
-                    seqnn_model, alt_1hot, targets_df, gene_strand_mask, gene_slice
+                    seqnn_model, alt_1hot, targets_df, gene_strand_mask, gene_slice, hi=args.hi,
                 )
 
             mut_scores["logSUM"].append(alt_score)
@@ -425,6 +432,7 @@ def main():
                 targets_df,
                 gene_strand_mask,
                 gene_slice,
+                hi=args.hi,
             )
             ref_score_reverse = predict_gene_with_rc(
                 seqnn_model,
@@ -433,11 +441,12 @@ def main():
                 targets_df,
                 gene_strand_mask,
                 gene_slice,
+                hi=args.hi,
             )
         else:  # ensemble and forward modes
             # Use predict_gene since model is already configured with correct ensemble_rc setting
             ref_score = predict_gene(
-                seqnn_model, ref_1hot, targets_df, gene_strand_mask, gene_slice
+                seqnn_model, ref_1hot, targets_df, gene_strand_mask, gene_slice, hi=args.hi,
             )
 
     y_mut = np.array(mut_scores["logSUM"])

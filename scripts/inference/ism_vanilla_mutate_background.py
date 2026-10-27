@@ -72,6 +72,12 @@ def main():
         default=None,
         help="Genome FASTA for sequences [Default: %(default)s]",
     )
+    parser.add_argument(
+        "--hi",
+        type=int,
+        default=0,
+        help="Model output head [Default: %(default)s]",
+    )
 
     #################################################################
     # mutation design parameters
@@ -351,7 +357,7 @@ def main():
         ):
             if args.rc == "ensemble":
                 bg_ref_score = predict_gene(
-                    seqnn_model, bg_1hot_t, targets_df, gene_strand_mask, gene_slice
+                    seqnn_model, bg_1hot_t, targets_df, gene_strand_mask, gene_slice, hi=args.hi,
                 )
             else:
                 bg_ref_score = predict_gene_with_rc(
@@ -361,6 +367,7 @@ def main():
                     targets_df,
                     gene_strand_mask,
                     gene_slice,
+                    hi=args.hi,
                 )
 
         # Perform ISM on this background
@@ -396,6 +403,7 @@ def main():
                             targets_df,
                             gene_strand_mask,
                             gene_slice,
+                            hi=args.hi,
                         )
                     else:
                         alt_score = predict_gene_with_rc(
@@ -405,6 +413,7 @@ def main():
                             targets_df,
                             gene_strand_mask,
                             gene_slice,
+                            hi=args.hi,
                         )
                     mut_scores.append(alt_score)
                 else:
